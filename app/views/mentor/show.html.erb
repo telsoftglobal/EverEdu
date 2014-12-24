@@ -1,0 +1,342 @@
+<% if not @curriculum.nil? %>
+    <div class="row  row-offcanvas row-offcanvas-right">
+      <!--Left Column-->
+      <div class="col-xs-12 col-md-9">
+        <div class="widget media-body" style="overflow: visible">
+          <div id="divContent" class="innerAll">
+            <p class="pull-right visible-xs">
+              <a href="javascript:;" data-toggle="offcanvas" class="no-ajaxify btn-outline"><i class="fa fa-arrow-left"></i></a>
+            </p>
+            <div style="clear:both; position: relative;">
+              <h3 class="aes-color aes-border-bottom name_update" style="word-wrap: break-word; margin-right: 30px;"><%= @curriculum.curriculum_name %></h3>
+              <ul class="nav nav-pills" role="tablist" style="top:0; right: 0px; position: absolute; z-index: 100">
+                <li role="presentation" class="dropdown pull-right">
+                  <a id="drop6" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                    <span class="caret"></span>
+                  </a>
+                  <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+                    <li role="presentation"><%= link_to '<i class="fa fa-edit"></i> '.html_safe + t('curriculum.bt_edit'), edit_curriculum_path(@curriculum), :title => t('curriculum.bt_edit') %></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" class="quickUpdate" url="<%= curriculums_quickedit_path%>" objectid="<%= @curriculum.id %>" href="#" modal_title="<%= t('curriculum.title_update_curriculum')%>"><i class="fa fa-edit"></i> <%= t('curriculum.title_update_curriculum')%></a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" class="quickUpdate" url="<%= curriculums_quickeditcategories_path %>" objectid="<%= @curriculum.id %>" href="#" modal_title="<%= t('category.title_quick_update')%>" ><i class="fa fa-edit"></i> <%= t('category.title_quick_update')%></a></li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;"><%= t('button.btn_close') %></a></li>
+                  </ul>
+                </li>
+              </ul>
+
+              <p class="innerLR half"><span><i class="fa fa-user">&nbsp;</i><%= @curriculum.mentor.user_name %></span>&nbsp;|&nbsp;<span><i class="fa fa-calendar">&nbsp;</i><%= @curriculum.created_at.strftime("%Y/%m/%d") %></span>
+              </p>
+            </div>
+            <!--Categories CuongCT disabled 23-12-2014 -->
+            <!--<div class="row box box-transparent">-->
+              <!--<% @curriculum.curriculum_categories.each_with_index do |category,index| %>-->
+                  <!--<div class="col-xs-4 col-sm-2">-->
+                    <!--<div class="box-quick-link color-background<%=index+1%>">-->
+                      <!--<a href="javascript:;" >-->
+                        <!--<div class="listLevel" style="display: none">-->
+                          <!--<ul>-->
+                            <!--<% category.levels.each do |level| %>-->
+                                <!--<li>-->
+                                  <!--<%= level.level_name %>-->
+                                <!--</li>-->
+                            <!--<% end %>-->
+                          <!--</ul>-->
+                        <!--</div>-->
+                        <!--<div class="header">-->
+                          <!--<div class="icon-star"></div>-->
+                          <!--&lt;!&ndash;<div class="icon-magic"></div>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--<div class="content"><%= category.category_name%></div>-->
+                      <!--</a>-->
+                    <!--</div>-->
+                  <!--</div>-->
+              <!--<% end %>-->
+            <!--</div>-->
+            <div class="separator"></div>
+            <div id="divDescription" style="position: relative;">
+              <div class="innerLR half description_update" style="overflow: auto"><%= @curriculum.description.html_safe %></div>
+            </div>
+          </div>
+        </div>
+
+        <!--Comment-->
+        <div id='divComments' class="widget" >
+          <%= render 'comments/comments' %>
+        </div>
+        <!--End comment-->
+      </div>
+      <!--End left column-->
+      <div class="col-xs-6 col-md-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <!--Right Column-->
+        <!--Material-->
+        <div id="divRight_sidebar" class="widget media-body">
+          <div class="innerAll menu-right">
+            <div>
+              <h4 class="item-curriculum">
+                <a id="<%= @curriculum.id %>" object_type="curriculum" curriculum_id="<%= @curriculum.id %>" object_id="<%= @curriculum.id %>" href="#" data-toggle="offcanvas" class="strong"><%= t('curriculum.lb_curriculum_detail') %>
+                  <% if @curriculum_notification[@curriculum.id] %>
+                      <span class='badge bg-primary notification-count'> <i class="fa fa-comment-o"></i><%=@curriculum_notification[@curriculum.id]%></span>
+                  <% end %>
+                </a>
+              </h4>
+              <div class="separator"></div>
+              <h4 class="aes-border-bottom strong"><%= t('material.title_material') %></h4>
+              <ul class="fa-ul" >
+                <% @materials.each do |material| %>
+                    <li class="item-curriculum">
+                      <i class="item-curriculum fa-li fa fa-square"></i>
+                      <a id="<%= material.id %>" object_type="material" curriculum_id="<%= @curriculum.id %>" object_id="<%= material.id %>" href="#" data-toggle="offcanvas">
+                        <%= material.material_name %>
+                        <% if @material_notification[material.id] %>
+                            <span class='badge bg-primary notification-count '> <i class="fa fa-comment-o"></i><%=@material_notification[material.id]%> </span>
+                        <% end %>
+
+                      </a>
+                      <ul class="fa-ul">
+                        <% material.children.each do |child| %>
+                            <li class="item-curriculum">
+                              <i class="fa-li fa fa-square"></i>
+                              <a id="<%= child.id %>" object_type="material" curriculum_id="<%= @curriculum.id %>" object_id="<%= child.id %>" href="#" data-toggle="offcanvas">
+                                <%= child.material_name %>
+                                <% if @material_notification[child.id] %>
+                                    <span class='badge bg-primary notification-count'><i class="fa fa-comment-o"></i> <%=@material_notification[child.id]%> </span>
+                                <% end %>
+                              </a>
+                            </li>
+                        <% end %>
+                      </ul>
+                    </li>
+                <% end %>
+              </ul>
+            </div>
+            <div class="separator"></div>
+            <!--Edd Material-->
+            <% if @curriculum.actions && @curriculum.actions.count > 0 %>
+                <!--Action-->
+                <div>
+                  <h4 class="aes-border-bottom strong"><%= t('action.title_action') %></h4>
+                  <ul class="fa-ul">
+                    <% @curriculum.actions.each do |action| %>
+                        <li class="item-curriculum ">
+                          <i class="fa-li fa fa-square"></i>
+                            <a id="<%= action.id %>" object_type="action" curriculum_id="<%= @curriculum.id %>" object_id="<%= action.id %>" href="#" data-toggle="offcanvas">
+                              <%= action.action_name %>
+                              <% if @action_notification[action.id] %>
+                                  <span class='badge bg-primary notification-count '> <i class="fa fa-comment-o"></i><%=@action_notification[action.id]%> </span>
+                              <% end %>
+                            </a>
+                        </li>
+                    <% end %>
+                  </ul>
+                </div>
+            <% end %>
+            <div class="separator"></div>
+
+            <!--Categories CuongCT disabled 23-12-2014 -->
+            <!--<h4 class="aes-border-bottom strong"><%= t('material.title_material') %></h4>-->
+            <!--<div id="accordion">-->
+              <!--<ul id="items">-->
+                <!--<% @curriculum.curriculum_categories.each do |category| %>-->
+                    <!--<li>-->
+                      <!--<a href="#"><%= category.category_name%></a>-->
+                      <!--<ul class="sub-items">-->
+                        <!--<% category.levels.each do |level| %>-->
+                        <!--<li>-->
+                          <!--<span><%= level.level_name %></span>-->
+                        <!--</li>-->
+                        <!--<% end %>-->
+                      <!--</ul>-->
+                    <!--</li>-->
+                <!--<% end %>-->
+              <!--</ul>-->
+            <!--</div>-->
+
+          </div>
+        </div>
+      </div>
+      <!-- // End right column  -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="updateModalLabel">Modal title</h4>
+          </div>
+          <div id="modalContent" class="modal-body" >
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('button.btn_cancel')%></button>
+            <button id="btnSave" type="button" class="btn btn-primary"><%= t('button.btn_save')%></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<% else %>
+    <div class="row">
+      <h3>Curriculum is not exist</h3>
+    </div>
+<% end %>
+
+<script>
+    $(document).ready(function () {
+//        $('[data-toggle="offcanvas"]').click(function () {
+//            $('.box-quick-link a').popover('hide');
+//            $('.row-offcanvas').toggleClass('active');
+//            $(this).find("i").toggleClass('fa-arrow-left');
+//            $(this).find("i").toggleClass('fa-arrow-right');
+//        });
+
+        $('#divRight_sidebar').on("click", "a", function () {
+            $('.box-quick-link a').popover('hide');
+            $('#divRight_sidebar a').removeClass("strong");
+            $(this).addClass("strong");
+            var aElement = $(this)
+            $.ajax({
+                url: '/mentor/update_curriculum_detail',
+                type: 'GET',
+                dataType: 'script',
+                data: {
+                    curriculum_id: $(this).attr("curriculum_id"),
+                    object_type: $(this).attr("object_type"),
+                    object_id: $(this).attr("object_id")
+                },
+                success: function () {
+//                    update new notify
+                    $(aElement).find("span.notification-count").remove()
+                },
+                error: function (xhr, status, response) {
+                    console.log("AJAX Error: " + status)
+                }
+            });
+        });
+    });
+</script>
+
+<!--CuongCT-->
+<script>
+    $(document).ready(function () {
+        $('a.quickUpdate').click( function (e) {
+            e.preventDefault();
+            $('.box-quick-link a').popover('hide');
+            var url = $(this).attr("url");
+            var id = $(this).attr("objectid");
+            var title = $(this).attr("modal_title");
+            console.log(title);
+//            console.log(id);
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    id: id
+                },
+                beforeSend: function (xhr) {
+                    $.loader.open({size:32});
+                },
+                dataType: "script",
+                success: function () {
+                    $.loader.close(true);
+                    $('#updateModal').modal({backdrop:'static'});
+                    $("#updateModal button").prop('disabled', false);
+                    $("#updateModalLabel").text(title);
+                },
+                error: function (xhr, status, response) {
+                    console.log("AJAX Error: " + status)
+                    $.loader.close(true);
+                }
+            });
+        });
+
+
+        $("#btnSave").click(function(){
+            $(this).prop('disabled', true);
+            if($("#category").length>0){
+                if($("#category").find("ul li").length==0){
+                    $.gritter.add({
+                        title: '<%= t('system.system_message') %>',
+                        text: '<%= t('category.msg_atleast_category')%>',
+                        before_open: function(){
+                            if($('.gritter-item-wrapper').length == 1)
+                            {
+                                return false;
+                            }
+                        }
+                    });
+                    return false;
+                }
+            }
+            $("p.has-error").remove();
+            $(".has-error").removeClass("has-error");
+            var valid = $("#quick_form").valid();
+            if(!valid) {
+                $(".modal-footer").find("button").prop('disabled', false);
+                return false;
+            }
+            BootstrapDialog.confirm('<%= t('confirm.title_confirm') %>','<%= t('button.btn_save') %>','<%= t('button.btn_cancel') %>','<%= t('curriculum.msg_confirm_save')%>', function(result){
+                $.loader.open({size:32});
+                if(result) {
+                    var quick_form = $("#quick_form");
+                    var url = $("#quick_form").attr("action");
+                    var data = $("#quick_form").serializeArray();
+                    console.log(url);
+                    $.ajax({
+                        type: "PATCH",
+                        url: url,
+                        data: data,
+                        beforeSend: function (xhr) {
+                            $.loader.open({size:32});
+                        },
+                        dataType: "script",
+                        success: function () {
+
+                            $.loader.close(true);
+                        },
+                        error: function (xhr, status, response) {
+                            console.log("AJAX Error: " + status)
+                            $.loader.close(true);
+                        }
+                    });
+                }else {
+                    $.loader.close(true);
+                }
+            });
+
+        });
+
+        $(function(){
+            $("#items > li > a").click(function(e){
+                e.preventDefault();
+                if($(this).hasClass("expanded"))
+                {
+                    $(this).removeClass("expanded");
+                    $(this).parent().children("ul").stop(true,true).slideUp("normal");
+                }
+                else
+                {
+                    $("#items a.expanded").removeClass("expanded");
+                    $(this).addClass("expanded");
+                    $(".sub-items").filter(":visible").slideUp("normal");
+                    $(this).parent().children("ul").stop(true,true).slideDown("normal");
+                }
+            });
+        });
+        $('.box-quick-link a').popover({
+            placement: 'auto',
+            html: true,
+            container: 'body',
+            title: function () {
+                return $(this).find("div.content").html();
+            },
+            content: function () {
+                return $(this).find("div.listLevel").html();
+            }
+        });
+    });
+    //categories
+//    $( window ).resize(function() {
+//        $('.box-quick-link a').popover('hide');
+//    });
+</script>

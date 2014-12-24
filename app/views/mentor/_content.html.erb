@@ -1,0 +1,165 @@
+<p id="load-detail-error" class="has-error help-block"><%= flash[:error]%></p>
+<% if flash[:error].nil? %>
+    <%if @object_type=='curriculum'%>
+        <% if @curriculum_detail %>
+            <p class="pull-right visible-xs">
+              <a href="javascript:;" data-toggle="offcanvas" class="no-ajaxify btn-outline"><i class="fa fa-arrow-left"></i></a>
+            </p>
+            <div style="clear:both; position: relative;">
+              <h3 class="aes-color  aes-border-bottom name_update" style="word-wrap: break-word; margin-right: 30px;"><%= @curriculum_detail.curriculum_name %></h3>
+              <ul class="nav nav-pills" role="tablist" style="top:0; right: 0px; position: absolute; z-index: 100">
+                <li role="presentation" class="dropdown pull-right">
+                  <a id="drop6" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                    <span class="caret"></span>
+                  </a>
+                  <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+                    <li role="presentation"><%= link_to '<i class="fa fa-edit"></i> '.html_safe + t('curriculum.bt_edit'), edit_curriculum_path(@curriculum_detail), :title => t('curriculum.bt_edit') %></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" class="quickUpdate" url="<%= curriculums_quickedit_path%>" objectid="<%= @curriculum_detail.id %>" href="#" modal_title="<%= t('curriculum.title_update_curriculum')%>"><i class="fa fa-edit"></i> <%= t('curriculum.title_update_curriculum')%></a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" class="quickUpdate" url="<%= curriculums_quickeditcategories_path %>" objectid="<%= @curriculum_detail.id %>" href="#" modal_title="<%= t('category.title_quick_update')%>" ><i class="fa fa-edit"></i> <%= t('category.title_quick_update')%></a></li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;"><%= t('button.btn_close') %></a></li>
+                  </ul>
+                </li>
+              </ul>
+              <p class="innerLR half"><span><i class="fa fa-user">&nbsp;</i><%= @curriculum_detail.mentor.user_name %></span>&nbsp;|&nbsp;<span><i class="fa fa-calendar">&nbsp;</i><%= @curriculum_detail.created_at.strftime("%Y/%m/%d") %></span>
+              </p>
+            </div>
+            <!--Categories CuongCT disabled 23-12-2014 -->
+            <!--<div class="row box box-transparent">-->
+              <!--<% @curriculum_detail.curriculum_categories.each_with_index do |category,index| %>-->
+                  <!--<div class="col-xs-4 col-sm-2">-->
+                    <!--<div class="box-quick-link color-background<%=index+1%>">-->
+                      <!--<a href="javascript:;" >-->
+                        <!--<div class="listLevel" style="display: none">-->
+                          <!--<ul>-->
+                            <!--<% category.levels.each do |level| %>-->
+                                <!--<li>-->
+                                  <!--<%= level.level_name %>-->
+                                <!--</li>-->
+                            <!--<% end %>-->
+                          <!--</ul>-->
+                        <!--</div>-->
+                        <!--<div class="header">-->
+                          <!--<div class="icon-star"></div>-->
+                        <!--</div>-->
+                        <!--<div class="content"><%= category.category_name%></div>-->
+                      <!--</a>-->
+                    <!--</div>-->
+                  <!--</div>-->
+              <!--<% end %>-->
+            <!--</div>-->
+            <div class="separator"></div>
+            <div id="divDescription" style="position: relative;">
+              <div class="innerLR half description_update" style="overflow: auto"><%= @curriculum_detail.description.html_safe %></div>
+            </div>
+            </div>
+        <% end %>
+    <%elsif @object_type=='material'%>
+        <% if @material_detail %>
+            <p class="pull-right visible-xs">
+              <a href="javascript:;" data-toggle="offcanvas" class="no-ajaxify btn-outline"><i class="fa fa-arrow-left"></i></a>
+            </p>
+            <div style="clear:both; position: relative;">
+                <h3 class="aes-color aes-border-bottom name_update" style="word-wrap: break-word; margin-right: 30px;"><%=@material_detail.material_name%></h3>
+                <ul class="nav nav-pills" role="tablist" style="top:0; right: 0px; position: absolute; z-index: 100">
+                  <li role="presentation" class="dropdown pull-right">
+                    <a id="drop6" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                      <span class="caret"></span>
+                    </a>
+                    <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+                      <li role="presentation"><a class="quickUpdate" url="<%= materials_quickedit_path %>" objectid="<%= @material_detail.id %>" href="#"  data-toggle="modal" modal_title="<%= t('material.title_quick_update')%>"><i class="fa fa-edit"></i> <%= t('material.title_quick_update')%></a></li>
+                      <li role="presentation" class="divider"></li>
+                      <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;"><%= t('button.btn_close') %></a></li>
+                    </ul>
+                  </li>
+                </ul>
+                <!--<a class="quickUpdate" url="/materials" objectid="<%= @material_detail.id %>" href="#"  data-toggle="modal" title="<%= t('material.title_quick_update')%>" style="top:0; right: 0; position: absolute"><i class="fa fa-edit"></i></a>-->
+                <!--<h5 class="strong"><%= @material_detail.material_name %></h5>-->
+                <p>
+                  <span class="strong"><%=t('material.lb_type')%></span>: <span class="type_update"><%=@material_detail.material_type.material_type_name%></span>
+                </p>
+            </div>
+            <div id="div_Url">
+                <%if !@material_detail.material_url.nil? && !@material_detail.material_url.empty?%>
+                    <p>
+                      <span class="strong"><%=t('material.lb_url')%></span>: <a class="url_update" href="<%= @material_detail.material_url%>"><%= @material_detail.material_url%></a>
+                    </p>
+                <% end %>
+            </div>
+            <div style="overflow: auto; text-align: justify;" class="description_update"><%= @material_detail.description.html_safe %></div>
+        <% end %>
+    <%elsif @object_type=='action'%>
+        <% if @action_detail %>
+            <p class="pull-right visible-xs">
+              <a href="javascript:;" data-toggle="offcanvas" class="no-ajaxify btn-outline"><i class="fa fa-arrow-left"></i></a>
+            </p>
+            <div style="clear:both; position: relative;">
+                <h3 class="aes-color aes-border-bottom name_update" style="word-wrap: break-word; margin-right: 30px;"><%= @action_detail.action_name %></h3>
+                <ul class="nav nav-pills" role="tablist" style="top:0; right: 0px; position: absolute; z-index: 100">
+                    <li role="presentation" class="dropdown pull-right">
+                      <a id="drop6" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                        <span class="caret"></span>
+                      </a>
+                      <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+                        <li role="presentation"><a class="quickUpdate" url="<%= aes_actions_quickedit_path %>" objectid="<%= @action_detail.id %>" href="#"  data-toggle="modal" modal_title="<%= t('action.title_quick_update')%>"><i class="fa fa-edit"></i> <%= t('action.title_quick_update')%></a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:;"><%= t('button.btn_close') %></a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <div style="overflow: auto; text-align: justify;" class="description_update"><%= sanitize @action_detail.description %></div>
+            </div>
+        <% end %>
+    <% end %>
+<% end %>
+<script>
+    $(document).ready(function () {
+        $('.quickUpdate').click( function (e) {
+            e.preventDefault();
+            var url = $(this).attr("url");
+            var id = $(this).attr("objectid");
+            var title = $(this).attr("modal_title");
+            console.log(id);
+            console.log($(this).attr("url"));
+            console.log($(this));
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    id: id
+                },
+                beforeSend: function (xhr) {
+                    $.loader.open({size:32});
+                },
+                dataType: "script",
+                success: function () {
+                    $.loader.close(true);
+                    $('#updateModal').modal();
+                    $("#updateModalLabel").text(title);
+                },
+                error: function (xhr, status, response) {
+                    console.log("AJAX Error: " + status)
+                    $.loader.close(true);
+                }
+            });
+        });
+
+        $('.btn-outline').click(function () {
+            $('.row-offcanvas').toggleClass('active');
+            $(this).find("i").toggleClass('fa-arrow-left');
+            $(this).find("i").toggleClass('fa-arrow-right');
+        });
+        $('.box-quick-link a').popover({
+            placement: 'auto',
+            html: true,
+            container: 'body',
+            title: function () {
+                return $(this).find("div.content").html();
+            },
+            content: function () {
+                return $(this).find("div.listLevel").html();
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,535 @@
+<%if @object_type=='curriculum'%>
+    <% if @curriculum_study_progress %>
+        <div class="panel-group accordion accordion-2" id="accordion">
+          <p id="pullright" class="pull-right visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><%= t('curriculum.lb_curriculum_outline')%> </button>
+          </p>
+          <div class="panel panel-default" id="panel1">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa fa-ticket"></i>&nbsp;<a class="accordion-toggle font" data-toggle="collapse" data-parent="#accordion" href="#collapse-1"><%= t('curriculum.lb_curriculum_name')%></a></h4>
+            </div>
+            <div id="collapse-1" class="panel-collapse collapse in" style="height: auto;">
+              <div class="panel-body">
+                <h4 class="strong innerT aes-content"><%= @curriculum_study_progress.curriculum.curriculum_name%></h4>
+                <p><%= t('student_curriculum_detail.lb_with')%> <%= @curriculum_study_progress.curriculum.mentor.user_name%>
+                  &nbsp;|&nbsp; <%= t('curriculum.lb_start_date')%>:  <%= !(@curriculum_study_progress.actual_start_date == nil)? @curriculum_study_progress.actual_start_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>
+                  &nbsp;|&nbsp; <%= t('curriculum.lb_end_date')%>:  <%= !(@curriculum_study_progress.actual_end_date == nil)? @curriculum_study_progress.actual_end_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>
+                </p>
+                <% if @curriculum_study_progress.status == 0 %>
+                    <div class="text-right innerAll border-top">
+                      <div class="btn-group btn-group-sm">
+                        <a id="href_start_curriculum" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-play-circle-o"></i> <%= t('curriculum.btn_start')%></a>
+                      </div>
+                    </div>
+                <%elsif @curriculum_study_progress.status == 1%>
+                    <div class="text-right innerAll border-top">
+                      <div class="btn-group btn-group-sm">
+                        <a id="href_done_curriculum" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-check-square"></i> <%= t('curriculum.btn_done')%> </a>
+                      </div>
+                    </div>
+                <%end%>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default " id="panel2">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa fa-tasks"></i>&nbsp;<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-2"><i></i><%= t('curriculum.lb_summary')%></a></h4>
+            </div>
+            <div id="collapse-2" class="panel-collapse collapse" style="height: 0px;">
+              <div class="panel-body aes-content">
+                <%= sanitize @curriculum_study_progress.curriculum.summary %>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default" id="panel3">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa  fa-file-o"></i>&nbsp;<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-3"><i></i><%= t('curriculum.lb_description')%></a></h4>
+            </div>
+            <div id="collapse-3" class="panel-collapse collapse" style="height: 0px;">
+              <div class="panel-body">
+                <%= sanitize @curriculum_study_progress.curriculum.description%>
+              </div>
+            </div>
+          </div>
+          <!--New comment form-->
+          <div id="comment-new" class="innerAll" style="background-color: white" >
+            <%= render partial: 'comments/comment_form', locals: {object: @object} %>
+          </div>
+          <!--End new comment form-->
+        </div>
+
+    <% end %>
+<%elsif @object_type == 'material'%>
+    <% if @material_study %>
+      <div class="widget widget-body">
+        <p id="pullright" class="pull-right visible-xs">
+          <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><%= t('curriculum.lb_curriculum_outline')%> </button>
+        </p>
+        <div class="aes-jumbotron">
+            <h4 class="strong innerT aes-content"><%= @material_study.material.material_name %></h4>
+            <p>
+              <%= t('curriculum.lb_start_date')%>: <%= !(@material_study.actual_start_date == nil)? @material_study.actual_start_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>&nbsp;|&nbsp;
+              <%= t('curriculum.lb_end_date')%>: <%= !(@material_study.actual_end_date == nil)? @material_study.actual_end_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>
+            </p>
+            <p>
+              <b><%= t('material.lb_type')%>:</b> <%= !(@material_study.material.material_type == nil)? @material_study.material.material_type.material_type_name: nil%>
+            </p>
+            <%if !((@material_study.material.material_url == '')||(@material_study.material.material_url == nil))%>
+                <p>
+                  <b>URL:</b> <a href="<%= !((@material_study.material.material_url == '')||(@material_study.material.material_url == nil))? @material_study.material.material_url: "#"%>"><%= !((@material_study.material.material_url == '')||(@material_study.material.material_url == nil))? @material_study.material.material_url: "NA"%></a>
+                </p>
+            <%end%>
+            <div id="divMaterial" class="innerT aes-content">
+              <%= sanitize @material_study.material.description %>
+            </div>
+            <div>
+              <button type="button" id="btnMaterial" class="link-button" ><span id="lb_Readmore_Material"><%= t('curriculum.lb_readmore')%></span> <i id="iMaterial" class="fa  fa-angle-down" style="font-size: 12pt"></i></button>
+            </div>
+            <% if @material_study.status == 0 %>
+                <div class="text-right innerAll border-top">
+                  <div class="btn-group btn-group-sm">
+                    <a id="href_start_material" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-play-circle-o"></i> <%= t('curriculum.btn_start')%></a>
+                  </div>
+                </div>
+            <%elsif @material_study.status == 1%>
+                <div class="text-right innerAll border-top">
+                  <div class="btn-group btn-group-sm">
+                    <a id="href_done_material" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-check-square"></i> <%= t('curriculum.btn_done')%> </a>
+                  </div>
+                </div>
+            <%end%>
+        </div>
+        <!--New comment form-->
+        <div id="comment-new" class="innerAll" style="background-color: white" >
+          <%= render partial: 'comments/comment_form', locals: {object: @object} %>
+        </div>
+        <!--End new comment form-->
+      </div>
+    <% end %>
+    <script>
+        $(document).ready(function () {
+            $("#href_start_material").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/student/update_menu_right',
+                    data: {
+                        curriculum_id:"<%= @curriculum_study_progress.id %>",
+                        object_type:"<%=  @object_type%>",
+                        object_id:"<%= @material_study.id%>",
+                        status: 1
+                    },
+                    dataType: "script",
+                    beforeSend: function (xhr) {
+                        $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                    },
+                    success: function () {
+                        $.loader.close();
+                        $('[data-toggle="offcanvas"]').unbind( "click" );
+                        $('[data-toggle="offcanvas"]').click(function () {
+                            $('.row-offcanvas').toggleClass('active')
+                        });
+                        $('#divRight a').removeClass("strong");
+                        $("#<%= @material_study.id %>").addClass("strong");
+                        showOrHide = true;
+                        $("#divDescription").hide();
+                        $("#btnDescription").click(function () {
+                            if (showOrHide === true) {
+                                $("#divDescription").show();
+                                $("#iDescription").removeClass("fa  fa-angle-down");
+                                $("#iDescription").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide === false) {
+                                $("#divDescription").hide();
+                                $("#iDescription").removeClass("fa  fa-angle-up");
+                                $("#iDescription").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide = !showOrHide;
+                        });
+                        //Material
+                        showOrHide_Material = true;
+                        $("#divMaterial").hide();
+                        $("#btnMaterial").click(function () {
+                            if (showOrHide_Material === true) {
+                                $("#divMaterial").show();
+                                $("#iMaterial").removeClass("fa  fa-angle-down");
+                                $("#iMaterial").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Material === false) {
+                                $("#divMaterial").hide();
+                                $("#iMaterial").removeClass("fa  fa-angle-up");
+                                $("#iMaterial").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Material = !showOrHide_Material;
+                        });
+                        //Action
+                        showOrHide_Action = true;
+                        $("#divAction").hide();
+                        $("#btnAction").click(function () {
+                            if (showOrHide_Action === true) {
+                                $("#divAction").show();
+                                $("#iAction").removeClass("fa  fa-angle-down");
+                                $("#iAction").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Action === false) {
+                                $("#divAction").hide();
+                                $("#iAction").removeClass("fa  fa-angle-up");
+                                $("#iAction").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Action = !showOrHide_Action;
+                        });
+                    },
+                    error: function (xhr, status, response) {
+                        console.log("AJAX Error: " + status)
+                    }
+                });
+
+            });
+            $("#href_done_material").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/student/update_menu_right',
+                    data: {
+                        curriculum_id:"<%= @curriculum_study_progress.id%>",
+                        object_type:"<%=  @object_type%>",
+                        object_id:"<%= @material_study.id%>",
+                        status: 2
+                    },
+
+                    dataType: "script",
+                    beforeSend: function (xhr) {
+                        $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                    },
+                    success: function () {
+                        $.loader.close();
+                        $('[data-toggle="offcanvas"]').unbind( "click" );
+                        $('[data-toggle="offcanvas"]').click(function () {
+                            $('.row-offcanvas').toggleClass('active')
+                        });
+                        $('#divRight a').removeClass("strong");
+                        $("#<%= @material_study.id %>").addClass("strong");
+                        showOrHide = true;
+                        $("#divDescription").hide();
+                        $("#btnDescription").click(function () {
+                            if (showOrHide === true) {
+                                $("#divDescription").show();
+                                $("#iDescription").removeClass("fa  fa-angle-down");
+                                $("#iDescription").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide === false) {
+                                $("#divDescription").hide();
+                                $("#iDescription").removeClass("fa  fa-angle-up");
+                                $("#iDescription").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide = !showOrHide;
+                        });
+                        //Material
+                        showOrHide_Material = true;
+                        $("#divMaterial").hide();
+                        $("#btnMaterial").click(function () {
+                            if (showOrHide_Material === true) {
+                                $("#divMaterial").show();
+                                $("#iMaterial").removeClass("fa  fa-angle-down");
+                                $("#iMaterial").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Material === false) {
+                                $("#divMaterial").hide();
+                                $("#iMaterial").removeClass("fa  fa-angle-up");
+                                $("#iMaterial").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Material = !showOrHide_Material;
+                        });
+                        //Action
+                        showOrHide_Action = true;
+                        $("#divAction").hide();
+                        $("#btnAction").click(function () {
+                            if (showOrHide_Action === true) {
+                                $("#divAction").show();
+                                $("#iAction").removeClass("fa  fa-angle-down");
+                                $("#iAction").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Action === false) {
+                                $("#divAction").hide();
+                                $("#iAction").removeClass("fa  fa-angle-up");
+                                $("#iAction").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Action = !showOrHide_Action;
+                        });
+
+                    },
+                    error: function (xhr, status, response) {
+                        console.log("AJAX Error: " + status)
+                    }
+                });
+
+            });
+        });
+    </script>
+<%elsif @object_type=='action'%>
+    <% if @action_study %>
+        <div class="widget widget-body">
+            <p id="pullright" class="pull-right visible-xs">
+              <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><%= t('curriculum.lb_curriculum_outline')%> </button>
+            </p>
+            <div class="aes-jumbotron">
+                <h4 class="strong innerT aes-content"><%= @action_study.action.action_name %></h4>
+                <p>
+                  <%= t('curriculum.lb_start_date')%>: <%= !(@action_study.actual_start_date==nil)? @action_study.actual_start_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>&nbsp;|&nbsp;
+                  <%= t('curriculum.lb_end_date')%>: <%= !(@action_study.actual_end_date==nil)? @action_study.actual_end_date.strftime("%Y/%m/%d %H:%M:%S"): "NA"%>
+                </p>
+                <div style="overflow: auto"><%= sanitize @action_study.action.description %></div>
+                <div id="divAction" class="innerT aes-content">
+                  <%= sanitize @action_study.action.description %>
+                </div>
+                <div>
+                  <button type="button" id="btnAction" class="link-button" ><span id="lb_Readmore_Action"><%= t('curriculum.lb_readmore')%></span> <i id="iAction" class="fa  fa-angle-down" style="font-size: 12pt"></i></button>
+                </div>
+                <% if @action_study.status == 0 %>
+                    <div class="text-right innerAll border-top">
+                      <div class="btn-group btn-group-sm">
+                            <a id="href_start_action" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-play-circle-o"></i>  <%= t('curriculum.btn_start')%></a>
+                      </div>
+                    </div>
+                <%elsif @action_study.status == 1%>
+                    <div class="text-right innerAll border-top">
+                      <div class="btn-group btn-group-sm">
+                      <a id="href_done_action" href="#" class="btn btn-primary height34"><i class="fa fa-fw fa-check-square"></i>  <%= t('curriculum.btn_done')%> </a>
+                      </div>
+                    </div>
+                <%end%>
+            </div>
+          <!--New comment form-->
+          <div id="comment-new" class="innerAll" style="background-color: white" >
+            <%= render partial: 'comments/comment_form', locals: {object: @object} %>
+          </div>
+          <!--End new comment form-->
+        </div>
+    <% end %>
+    <script>
+        $(document).ready(function () {
+            $("#href_start_action").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/student/update_menu_right',
+                    data: {
+                        curriculum_id:"<%= @curriculum_study_progress.id%>",
+                        object_type:"<%=  @object_type%>",
+                        object_id:"<%= @action_study.id%>",
+                        status: 1
+                    },
+                    dataType: "script",
+                    beforeSend: function (xhr) {
+                        $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                    },
+                    success: function () {
+                        $.loader.close();
+                        $('[data-toggle="offcanvas"]').unbind( "click" );
+                        $('[data-toggle="offcanvas"]').click(function () {
+                            $('.row-offcanvas').toggleClass('active')
+                        });
+                        $('#divRight a').removeClass("strong");
+                        $("#<%= @action_study.id %>").addClass("strong");
+                        showOrHide = true;
+                        $("#divDescription").hide();
+                        $("#btnDescription").click(function () {
+                            if (showOrHide === true) {
+                                $("#divDescription").show();
+                                $("#iDescription").removeClass("fa  fa-angle-down");
+                                $("#iDescription").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide === false) {
+                                $("#divDescription").hide();
+                                $("#iDescription").removeClass("fa  fa-angle-up");
+                                $("#iDescription").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide = !showOrHide;
+                        });
+                        //Material
+                        showOrHide_Material = true;
+                        $("#divMaterial").hide();
+                        $("#btnMaterial").click(function () {
+                            if (showOrHide_Material === true) {
+                                $("#divMaterial").show();
+                                $("#iMaterial").removeClass("fa  fa-angle-down");
+                                $("#iMaterial").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Material === false) {
+                                $("#divMaterial").hide();
+                                $("#iMaterial").removeClass("fa  fa-angle-up");
+                                $("#iMaterial").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Material = !showOrHide_Material;
+                        });
+                        //Action
+                        showOrHide_Action = true;
+                        $("#divAction").hide();
+                        $("#btnAction").click(function () {
+                            if (showOrHide_Action === true) {
+                                $("#divAction").show();
+                                $("#iAction").removeClass("fa  fa-angle-down");
+                                $("#iAction").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Action === false) {
+                                $("#divAction").hide();
+                                $("#iAction").removeClass("fa  fa-angle-up");
+                                $("#iAction").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Action = !showOrHide_Action;
+                        });
+                    },
+                    error: function (xhr, status, response) {
+                        console.log("AJAX Error: " + status)
+                    }
+                });
+
+            });
+            $("#href_done_action").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/student/update_menu_right',
+                    data: {
+                        curriculum_id:"<%= @curriculum_study_progress.id%>",
+                        object_type:"<%=  @object_type%>",
+                        object_id:"<%= @action_study.id%>",
+                        status: 2
+                    },
+
+                    dataType: "script",
+                    beforeSend: function (xhr) {
+                        $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                    },
+                    success: function () {
+                        $.loader.close();
+                        $('[data-toggle="offcanvas"]').unbind( "click" );
+                        $('[data-toggle="offcanvas"]').click(function () {
+                            $('.row-offcanvas').toggleClass('active')
+                        });
+                        $('#divRight a').removeClass("strong");
+                        $("#<%= @action_study.id %>").addClass("strong");
+                        showOrHide = true;
+                        $("#divDescription").hide();
+                        $("#btnDescription").click(function () {
+                            if (showOrHide === true) {
+                                $("#divDescription").show();
+                                $("#iDescription").removeClass("fa  fa-angle-down");
+                                $("#iDescription").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide === false) {
+                                $("#divDescription").hide();
+                                $("#iDescription").removeClass("fa  fa-angle-up");
+                                $("#iDescription").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide = !showOrHide;
+                        });
+                        //Material
+                        showOrHide_Material = true;
+                        $("#divMaterial").hide();
+                        $("#btnMaterial").click(function () {
+                            if (showOrHide_Material === true) {
+                                $("#divMaterial").show();
+                                $("#iMaterial").removeClass("fa  fa-angle-down");
+                                $("#iMaterial").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Material === false) {
+                                $("#divMaterial").hide();
+                                $("#iMaterial").removeClass("fa  fa-angle-up");
+                                $("#iMaterial").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Material").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Material = !showOrHide_Material;
+                        });
+                        //Action
+                        showOrHide_Action = true;
+                        $("#divAction").hide();
+                        $("#btnAction").click(function () {
+                            if (showOrHide_Action === true) {
+                                $("#divAction").show();
+                                $("#iAction").removeClass("fa  fa-angle-down");
+                                $("#iAction").addClass("fa  fa-angle-up");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_showless')%>")
+                            } else if (showOrHide_Action === false) {
+                                $("#divAction").hide();
+                                $("#iAction").removeClass("fa  fa-angle-up");
+                                $("#iAction").addClass("fa  fa-angle-down");
+                                $("#lb_Readmore_Action").text("<%= t('curriculum.lb_readmore')%>")
+                            }
+                            showOrHide_Action = !showOrHide_Action;
+                        });
+                    },
+                    error: function (xhr, status, response) {
+                        console.log("AJAX Error: " + status)
+                    }
+                });
+
+            });
+        });
+    </script>
+<% end %>
+<script>
+    $(document).ready(function () {
+        $("#href_start_curriculum").click(function () {
+            $.ajax({
+                type: "GET",
+                url: '/student/update_menu_right',
+                data: {
+                    curriculum_id:"<%= @curriculum_study_progress.id%>",
+                    object_type:"curriculum",
+                    status: 1
+                },
+                dataType: "script",
+                beforeSend: function (xhr) {
+                    $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                },
+                success: function () {
+                    $.loader.close();
+                    $('[data-toggle="offcanvas"]').unbind( "click" );
+                    $('[data-toggle="offcanvas"]').click(function () {
+                        $('.row-offcanvas').toggleClass('active')
+                    });
+                    $('#divRight a').removeClass("strong");
+                    $("#<%= @curriculum_study_progress.id %>").addClass("strong");
+                },
+                error: function (xhr, status, response) {
+                    console.log("AJAX Error: " + status)
+                }
+            });
+
+        });
+        $("#href_done_curriculum").click(function () {
+            $.ajax({
+                type: "GET",
+                url: '/student/update_menu_right',
+                data: {
+                    curriculum_id:"<%= @curriculum_study_progress.id%>",
+                    object_type:"curriculum",
+                    status: 2
+                },
+                dataType: "script",
+                beforeSend: function (xhr) {
+                    $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+                },
+                success: function () {
+                    $.loader.close();
+                    $('[data-toggle="offcanvas"]').unbind( "click" );
+                    $('[data-toggle="offcanvas"]').click(function () {
+                        $('.row-offcanvas').toggleClass('active')
+                    });
+                    $('#divRight a').removeClass("strong");
+                    $("#<%= @curriculum_study_progress.id %>").addClass("strong");
+                },
+                error: function (xhr, status, response) {
+                    console.log("AJAX Error: " + status)
+                }
+            });
+        });
+    });
+</script>

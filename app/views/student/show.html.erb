@@ -1,0 +1,200 @@
+<link rel="stylesheet" href="../../assets/stylesheets/template/library/bootstrap/css/bootstrap.min.css">
+<div class="row  row-offcanvas row-offcanvas-right" >
+  <!--Left Column-->
+  <div  class="col-xs-12 col-md-9">
+    <div id="divContent">
+        <%= render 'student/content' %>
+    </div>
+    <div class="widget media-body">
+      <!--Comment-->
+      <div id='divComments'>
+        <%= render 'comments/comments' %>
+      </div>
+      <!--End comment-->
+     </div>
+ </div>
+  <!--End left column-->
+  <div class="col-xs-6 col-md-3 sidebar-offcanvas" id="sidebar" role="navigation">
+    <!--Right Column-->
+    <div id="divRight" class="widget media-body">
+      <div class="innerAll menu-right">
+        <div id="div_menu_right">
+            <%= render 'student/menu_right' %>
+        </div>
+        <div id="div_menu_right1">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- // End right column  -->
+</div>
+<script>
+ $(document).ready(function () {
+    $('#divRight').on("click", "a", function () {
+    $('#divRight a').removeClass("strong");
+    $(this).addClass("strong");
+    $.ajax({
+            url: '/student/update_curriculum_detail',
+            type: 'GET',
+            dataType: 'script',
+            data: {
+                curriculum_id: $(this).attr("curriculum_id"),
+                object_type: $(this).attr("object_type"),
+                object_id: $(this).attr("object_id")
+            },
+            beforeSend: function (xhr) {
+                $.loader.open({imgUrl: "<%= asset_path('assets/template/ajaxloader/images/loading32x32.gif') %>"});
+            },
+            success: function () {
+                $('[data-toggle="offcanvas"]').unbind( "click" );
+                $('[data-toggle="offcanvas"]').click(function () {
+                    $('.row-offcanvas').toggleClass('active')
+                });
+                $('#divRight a').removeClass("strong");
+                $("#<%= @curriculum_study_progress.id %>").addClass("strong");
+                    showOrHide = true;
+                    $("#divDescription").hide();
+                    $("#btnDescription").click(function () {
+                        if (showOrHide === true) {
+                            $("#divDescription").show();
+                            $("#iDescription").removeClass("fa  fa-angle-down");
+                            $("#iDescription").addClass("fa  fa-angle-up");
+                            $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+                        } else if (showOrHide === false) {
+                            $("#divDescription").hide();
+                            $("#iDescription").removeClass("fa  fa-angle-up");
+                            $("#iDescription").addClass("fa  fa-angle-down");
+                            $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+                        }
+                        showOrHide = !showOrHide;
+                    });
+                    //Material
+                    showOrHide_Material = true;
+                    $("#divMaterial").hide();
+                    $("#btnMaterial").click(function () {
+                        if (showOrHide_Material === true) {
+                            $("#divMaterial").show();
+                            $("#iMaterial").removeClass("fa  fa-angle-down");
+                            $("#iMaterial").addClass("fa  fa-angle-up");
+                            $("#lb_Readmore_Material").text("<%= t('curriculum.lb_showless')%>")
+                        } else if (showOrHide_Material === false) {
+                            $("#divMaterial").hide();
+                            $("#iMaterial").removeClass("fa  fa-angle-up");
+                            $("#iMaterial").addClass("fa  fa-angle-down");
+                            $("#lb_Readmore_Material").text("<%= t('curriculum.lb_readmore')%>")
+                        }
+                        showOrHide_Material = !showOrHide_Material;
+                    });
+                    //Action
+                    showOrHide_Action = true;
+                    $("#divAction").hide();
+                    $("#btnAction").click(function () {
+                        if (showOrHide_Action === true) {
+                            $("#divAction").show();
+                            $("#iAction").removeClass("fa  fa-angle-down");
+                            $("#iAction").addClass("fa  fa-angle-up");
+                            $("#lb_Readmore_Action").text("<%= t('curriculum.lb_showless')%>")
+                        } else if (showOrHide_Action === false) {
+                            $("#divAction").hide();
+                            $("#iAction").removeClass("fa  fa-angle-up");
+                            $("#iAction").addClass("fa  fa-angle-down");
+                            $("#lb_Readmore_Action").text("<%= t('curriculum.lb_readmore')%>")
+                        }
+                        showOrHide_Action = !showOrHide_Action;
+                    });
+                $.loader.close();
+            },
+            error: function (xhr, status, response) {
+                console.log("AJAX Error: " + status)
+            }
+        });
+    });
+    //Open dialog
+     showOrHide=true;
+    $("#divDescription").hide();
+    $("#btnDescription").click(function () {
+        if ( showOrHide === true ) {
+            $("#divDescription").show();
+            $("#iDescription").removeClass("fa  fa-angle-down");
+            $("#iDescription").addClass("fa  fa-angle-up");
+            $("#lb_Readmore").text("<%= t('curriculum.lb_showless')%>")
+        } else if ( showOrHide === false ) {
+            $( "#divDescription" ).hide();
+            $("#iDescription").removeClass("fa  fa-angle-up");
+            $("#iDescription").addClass("fa  fa-angle-down");
+            $("#lb_Readmore").text("<%= t('curriculum.lb_readmore')%>")
+        }
+        showOrHide=!showOrHide;
+    });
+     var activeName = true;
+     var activeSummary = false;
+     var activeDesc = false;
+     $('.panel').on('hidden.bs.collapse', function (e) {
+         var pnlId=e.currentTarget.id;
+         //alert('Event fired on hidden #' + e.currentTarget.id);
+         if (pnlId === 'panel1'){
+             activeName = false;
+         }
+         if (pnlId === 'panel2'){
+             activeSummary = false;
+         }
+         if (pnlId === 'panel3'){
+             activeDesc = false;
+         }
+     })
+     $('.panel').on('shown.bs.collapse', function (e) {
+         //alert('Event fired on shown #' + e.currentTarget.id);
+         var pnlId=e.currentTarget.id;
+         if (pnlId === 'panel1'){
+             activeName = true;
+         }
+         if (pnlId === 'panel2'){
+             activeSummary = true;
+         }
+         if (pnlId === 'panel3'){
+             activeDesc = true;
+         }
+     })
+     $(window).bind('scroll', function () {
+         var scrollPos = $(document).scrollTop();
+         $('#accordion').css({
+             top: scrollPos
+         });
+         $('#divRight').css({
+             top: scrollPos
+         });
+         if (activeName) {
+             $('#collapse-1').collapse("hide");
+         }
+         if (activeSummary) {
+             $('#collapse-2').collapse("hide");
+         }
+         if (activeDesc) {
+             $('#collapse-3').collapse("hide");
+         }
+     });
+
+     $(window).bind('mousewheel', function () {
+         var scrollPos = $(document).scrollTop();
+         //alert('OK');
+         $('#accordion').css({
+             top: scrollPos
+         });
+         $('#divRight').css({
+             top: scrollPos
+         });
+         if (activeName) {
+             $('#collapse-1').collapse("hide");
+         }
+         if (activeSummary) {
+             $('#collapse-2').collapse("hide");
+         }
+         if (activeDesc) {
+             $('#collapse-3').collapse("hide");
+         }
+     });
+
+ });
+</script>
+
+

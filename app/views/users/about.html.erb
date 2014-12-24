@@ -1,0 +1,35 @@
+<div class="innerLR">
+  <h3><%= t('users.title_about') %></h3>
+
+  <div class="row">
+    <div class="widget">
+      <div class="media">
+        <div class="pull-left innerAll text-center">
+          <% if !@user.avatar_url.nil? %>
+              <a><%= image_tag @user.avatar_url, class: "img-circle avatar", alt: ""%></a>
+          <% else %>
+              <a><%= image_tag 'noavatar.png', class: "img-circle avatar", alt: ""%></a>
+          <% end %>
+          <div class="changeavatar">
+              <a title=<%= t('users.lb_changeavatar')%> rel="tooltip" href="#" role="button">
+                <i class="fa fa-camera" style="font-size: 16pt;"></i>
+              </a>
+          </div>
+
+          <h3 class="strong margin-none"><%= @user.user_name%></h3>
+        </div>
+        <div class="media-body">
+          <p>
+            Other Informationsdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          </p>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
